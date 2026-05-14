@@ -1,0 +1,6 @@
+{
+  "name": "Te Reo Emotion Charades",
+  "description": "An interactive classroom game where students act out emotions in Te Reo Māori, with real-time AI feedback and encouragement.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["image-analysis"]
+}
