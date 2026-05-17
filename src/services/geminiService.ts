@@ -19,16 +19,18 @@ export async function analyzeEmotion(
     });
 
     if (!response.ok) {
-      throw new Error(`Server error: ${response.statusText}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `Server error: ${response.statusText}`);
     }
 
     return await response.json();
   } catch (error) {
     console.error("Gemini Error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Oops! My magic goggles are a bit blurry. Let's try that again!";
     return {
       isMatch: false,
-      identifiedEmotion: "acting",
-      message: "Oops! My magic goggles are a bit blurry. Let's try that again!"
+      identifiedEmotion: "checking",
+      message: errorMessage
     };
   }
 }

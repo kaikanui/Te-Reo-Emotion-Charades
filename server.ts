@@ -12,16 +12,26 @@ async function startServer() {
   app.use(express.json({ limit: "10mb" }));
 
   // Initialize Gemini
-  const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
+  const ai = new GoogleGenAI({ 
+    apiKey: process.env.GEMINI_API_KEY || "",
+    httpOptions: {
+      headers: {
+        'User-Agent': 'aistudio-build',
+      }
+    }
+  });
 
   // API Route for Emotion Analysis
   app.post("/api/analyze", async (req, res) => {
     try {
       const { image, targetEmotion, isHintNeeded } = req.body;
+      const currentKey = process.env.GEMINI_API_KEY;
 
-      if (!process.env.GEMINI_API_KEY) {
-        return res.status(500).json({ 
-          error: "GEMINI_API_KEY is not configured on the server." 
+      if (!currentKey || currentKey === "MY_GEMINI_API_KEY") {
+        return res.status(400).json({ 
+          message: "Gemini API key is missing. Please set it in the Settings > Secrets panel.",
+          isMatch: false,
+          identifiedEmotion: "error"
         });
       }
 
